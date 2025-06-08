@@ -22,8 +22,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'employee_id',
+        'profile_picture',
         'school_id',
-        'is_active'
+        'is_active',
+        'last_login_at',
+        'login_count'
     ];
 
     /**
@@ -46,12 +51,29 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
+            'login_count' => 'integer'
         ];
     }
 
     public function school()
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function collectedPayments()
+    {
+        return $this->hasMany(Payment::class, 'collected_by');
+    }
+
+    public function createdConcessions()
+    {
+        return $this->hasMany(Concession::class, 'created_by');
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class, 'user_id');
     }
 }

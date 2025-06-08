@@ -28,9 +28,18 @@ class PaymentSeeder extends Seeder
                 ->where('is_active', true)
                 ->first();
 
-            // Get a staff user for collected_by
-            $staffUser = User::where('school_id', $school->id)->first();
-            if (!$staffUser) continue;
+            if (!$activeYear) continue;
+
+            // Get or create a staff user for collected_by
+            $staffUser = User::first();
+            if (!$staffUser) {
+                $staffUser = User::create([
+                    'name' => 'Admin User',
+                    'email' => 'admin@' . strtolower($school->code) . '.edu',
+                    'email_verified_at' => now(),
+                    'password' => bcrypt('password'),
+                ]);
+            }
 
             // Get all students and fee types for this school
             $students = Student::where('school_id', $school->id)
@@ -38,9 +47,11 @@ class PaymentSeeder extends Seeder
                 ->get();
             $feeTypes = FeeType::where('school_id', $school->id)->get();
 
-            foreach ($students as $student) {
-                // Create 3-5 payments per student
-                $numPayments = rand(3, 5);
+            if ($students->isEmpty() || $feeTypes->isEmpty()) continue;
+
+            foreach ($students->take(10) as $student) { // Limit to 10 students to speed up seeding
+                // Create 2-3 payments per student
+                $numPayments = rand(2, 3);
                 
                 for ($i = 0; $i < $numPayments; $i++) {
                     $feeType = $feeTypes->random();

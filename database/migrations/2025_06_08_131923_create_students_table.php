@@ -44,14 +44,13 @@ return new class extends Migration
              $table->string('guardian_phone')->nullable();
              $table->string('guardian_occupation')->nullable();
              $table->string('guardian_relation')->nullable();
-             $table->string('photo')->nullable();
-            $table->boolean('is_active')->default(true);
+             $table->string('photo_path')->nullable();
             
             // Academic Information
             $table->date('admission_date');
             $table->string('previous_school')->nullable();
             $table->text('previous_qualification')->nullable();
-            $table->string('photo_path')->nullable();
+            $table->json('documents')->nullable();
             
             // Status and Relationships
             $table->boolean('is_active')->default(true);

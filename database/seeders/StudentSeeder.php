@@ -13,7 +13,6 @@ class StudentSeeder extends Seeder
 {
     private $bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
     private $religions = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Other'];
-    private $categories = ['General', 'OBC', 'SC', 'ST', 'Other'];
     private $houses = ['Red', 'Blue', 'Green', 'Yellow'];
 
     /**
@@ -28,56 +27,58 @@ class StudentSeeder extends Seeder
                 ->where('is_active', true)
                 ->first();
 
+            if (!$activeYear) continue;
+
             $classes = SchoolClass::where('school_id', $school->id)
                 ->where('academic_year_id', $activeYear->id)
                 ->get();
 
             foreach ($classes as $class) {
-                // Create 20 students per class
-                for ($i = 1; $i <= 20; $i++) {
-                    $admissionNo = $school->code . '/' . date('Y') . '/' . str_pad($i, 4, '0', STR_PAD_LEFT);
+                // Create 10 students per class
+                for ($i = 1; $i <= 10; $i++) {
+                    $admissionNo = $school->code . '/' . date('Y') . '/' . str_pad(($class->id * 100 + $i), 4, '0', STR_PAD_LEFT);
                     $rollNo = str_pad($i, 2, '0', STR_PAD_LEFT);
-                    $gender = $i % 2 == 0 ? 'Male' : 'Female';
+                    $gender = $i % 2 == 0 ? 'male' : 'female';
 
                     Student::create([
                         'admission_no' => $admissionNo,
                         'roll_no' => $rollNo,
-                        'first_name' => $gender == 'Male' ? $this->getMaleFirstName() : $this->getFemaleFirstName(),
+                        'first_name' => $gender == 'male' ? $this->getMaleFirstName() : $this->getFemaleFirstName(),
                         'last_name' => $this->getLastName(),
                         'gender' => $gender,
                         'date_of_birth' => now()->subYears(rand(5, 15))->subMonths(rand(1, 12))->format('Y-m-d'),
                         'blood_group' => $this->bloodGroups[array_rand($this->bloodGroups)],
                         'religion' => $this->religions[array_rand($this->religions)],
                         'caste' => 'N/A',
-                        'category' => $this->categories[array_rand($this->categories)],
-                        'house_name' => $this->houses[array_rand($this->houses)],
                         'nationality' => 'Indian',
-                        'admission_date' => now()->format('Y-m-d'),
-                        
-                        'permanent_address' => $this->getAddress(),
-                        'current_address' => $this->getAddress(),
+                        'aadhar_number' => null,
+                        'house_name' => $this->houses[array_rand($this->houses)],
+                        'address' => $this->getAddress(),
+                        'city' => 'Bangalore',
+                        'state' => 'Karnataka',
+                        'country' => 'India',
+                        'pincode' => (string) rand(560001, 560100),
                         'phone' => '+91' . rand(7000000000, 9999999999),
                         'email' => Str::slug($admissionNo) . '@example.com',
                         
                         'father_name' => $this->getMaleFirstName() . ' ' . $this->getLastName(),
-                        'father_occupation' => $this->getOccupation(),
                         'father_phone' => '+91' . rand(7000000000, 9999999999),
-                        'father_email' => 'father.' . Str::slug($admissionNo) . '@example.com',
+                        'father_occupation' => $this->getOccupation(),
                         
                         'mother_name' => $this->getFemaleFirstName() . ' ' . $this->getLastName(),
-                        'mother_occupation' => $this->getOccupation(),
                         'mother_phone' => '+91' . rand(7000000000, 9999999999),
-                        'mother_email' => 'mother.' . Str::slug($admissionNo) . '@example.com',
+                        'mother_occupation' => $this->getOccupation(),
                         
                         'guardian_name' => null,
-                        'guardian_occupation' => null,
                         'guardian_phone' => null,
-                        'guardian_email' => null,
+                        'guardian_occupation' => null,
                         'guardian_relation' => null,
+                        'photo_path' => null,
                         
+                        'admission_date' => now()->format('Y-m-d'),
                         'previous_school' => null,
-                        'previous_class' => null,
-                        'transfer_certificate' => null,
+                        'previous_qualification' => null,
+                        'documents' => null,
                         
                         'school_id' => $school->id,
                         'academic_year_id' => $activeYear->id,
@@ -111,13 +112,10 @@ class StudentSeeder extends Seeder
     {
         $streets = ['MG Road', 'Gandhi Street', 'Nehru Road', 'Temple Street', 'Church Road'];
         $areas = ['Jayanagar', 'Indiranagar', 'Koramangala', 'HSR Layout', 'BTM Layout'];
-        $cities = ['Bangalore', 'Mysore', 'Hubli', 'Mangalore', 'Belgaum'];
         
         return rand(1, 999) . ', ' . 
                $streets[array_rand($streets)] . ', ' . 
-               $areas[array_rand($areas)] . ', ' . 
-               $cities[array_rand($cities)] . ' - ' . 
-               rand(560001, 560100);
+               $areas[array_rand($areas)];
     }
 
     private function getOccupation(): string

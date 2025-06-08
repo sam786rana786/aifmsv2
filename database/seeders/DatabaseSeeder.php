@@ -11,17 +11,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Call seeders in order of dependencies
         $this->call([
-            SchoolSeeder::class,          // First, create schools
-            AcademicYearSeeder::class,    // Then academic years (needs schools)
-            SchoolClassSeeder::class,     // Classes (needs schools and academic years)
-            FeeTypeSeeder::class,         // Fee types (needs schools)
-            TransportRouteSeeder::class,  // Transport routes (needs schools)
-            StudentSeeder::class,         // Students (needs schools, classes, academic years)
-            FeeStructureSeeder::class,    // Fee structures (needs fee types, classes)
-            PaymentSeeder::class,         // Payments (needs students, fee types)
-            TransportAssignmentSeeder::class, // Transport assignments (needs students, routes)
+            // Core setup
+            SchoolSeeder::class,
+            AcademicYearSeeder::class,
+            
+            // Permission system setup (must be before UserSeeder)
+            PermissionRoleSeeder::class,
+            
+            // User setup
+            UserSeeder::class,
+            
+            // Educational structure
+            SchoolClassSeeder::class,
+            FeeTypeSeeder::class,
+            FeeStructureSeeder::class,
+            
+            // Students and related data
+            StudentSeeder::class,
+            
+            // Transport
+            TransportRouteSeeder::class,
+            TransportAssignmentSeeder::class,
+            
+            // Financial operations
+            PaymentSeeder::class,
+            
+            // System settings and features
+            SettingSeeder::class,
+            NotificationSeeder::class,
+            ActivityLogSeeder::class,
+            StudentPromotionSeeder::class,
+            PreviousYearBalanceSeeder::class,
         ]);
     }
 }

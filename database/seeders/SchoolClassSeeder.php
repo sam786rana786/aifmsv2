@@ -17,18 +17,18 @@ class SchoolClassSeeder extends Seeder
         $schools = School::all();
         
         $standardClasses = [
-            ['name' => 'LKG', 'code' => 'LKG', 'capacity' => 30],
-            ['name' => 'UKG', 'code' => 'UKG', 'capacity' => 30],
-            ['name' => 'Class 1', 'code' => 'C01', 'capacity' => 35],
-            ['name' => 'Class 2', 'code' => 'C02', 'capacity' => 35],
-            ['name' => 'Class 3', 'code' => 'C03', 'capacity' => 35],
-            ['name' => 'Class 4', 'code' => 'C04', 'capacity' => 35],
-            ['name' => 'Class 5', 'code' => 'C05', 'capacity' => 35],
-            ['name' => 'Class 6', 'code' => 'C06', 'capacity' => 40],
-            ['name' => 'Class 7', 'code' => 'C07', 'capacity' => 40],
-            ['name' => 'Class 8', 'code' => 'C08', 'capacity' => 40],
-            ['name' => 'Class 9', 'code' => 'C09', 'capacity' => 40],
-            ['name' => 'Class 10', 'code' => 'C10', 'capacity' => 40],
+            ['name' => 'LKG', 'capacity' => 30],
+            ['name' => 'UKG', 'capacity' => 30],
+            ['name' => 'Class 1', 'capacity' => 35],
+            ['name' => 'Class 2', 'capacity' => 35],
+            ['name' => 'Class 3', 'capacity' => 35],
+            ['name' => 'Class 4', 'capacity' => 35],
+            ['name' => 'Class 5', 'capacity' => 35],
+            ['name' => 'Class 6', 'capacity' => 40],
+            ['name' => 'Class 7', 'capacity' => 40],
+            ['name' => 'Class 8', 'capacity' => 40],
+            ['name' => 'Class 9', 'capacity' => 40],
+            ['name' => 'Class 10', 'capacity' => 40],
         ];
 
         foreach ($schools as $school) {
@@ -37,28 +37,30 @@ class SchoolClassSeeder extends Seeder
                 ->where('is_active', true)
                 ->first();
 
-            foreach ($standardClasses as $class) {
-                // Create class A
-                SchoolClass::create([
-                    'name' => $class['name'] . ' A',
-                    'code' => $class['code'] . 'A',
-                    'description' => $class['name'] . ' Section A',
-                    'capacity' => $class['capacity'],
-                    'school_id' => $school->id,
-                    'academic_year_id' => $activeAcademicYear->id,
-                    'is_active' => true,
-                ]);
+            if ($activeAcademicYear) {
+                foreach ($standardClasses as $class) {
+                    // Create class A
+                    SchoolClass::create([
+                        'name' => $class['name'],
+                        'section' => 'A',
+                        'description' => $class['name'] . ' Section A',
+                        'capacity' => $class['capacity'],
+                        'school_id' => $school->id,
+                        'academic_year_id' => $activeAcademicYear->id,
+                        'is_active' => true,
+                    ]);
 
-                // Create class B
-                SchoolClass::create([
-                    'name' => $class['name'] . ' B',
-                    'code' => $class['code'] . 'B',
-                    'description' => $class['name'] . ' Section B',
-                    'capacity' => $class['capacity'],
-                    'school_id' => $school->id,
-                    'academic_year_id' => $activeAcademicYear->id,
-                    'is_active' => true,
-                ]);
+                    // Create class B
+                    SchoolClass::create([
+                        'name' => $class['name'],
+                        'section' => 'B',
+                        'description' => $class['name'] . ' Section B',
+                        'capacity' => $class['capacity'],
+                        'school_id' => $school->id,
+                        'academic_year_id' => $activeAcademicYear->id,
+                        'is_active' => true,
+                    ]);
+                }
             }
         }
     }

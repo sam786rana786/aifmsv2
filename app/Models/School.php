@@ -13,6 +13,7 @@ class School extends Model
     protected $fillable = [
         'name',
         'code',
+        'affiliation_number',
         'address',
         'city',
         'state',
@@ -21,7 +22,9 @@ class School extends Model
         'phone',
         'email',
         'website',
-        'logo',
+        'logo_path',
+        'favicon_path',
+        'currency_code',
         'is_active'
     ];
 
@@ -42,5 +45,65 @@ class School extends Model
     public function students()
     {
         return $this->hasMany(Student::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function feeTypes()
+    {
+        return $this->hasMany(FeeType::class);
+    }
+
+    public function feeStructures()
+    {
+        return $this->hasMany(FeeStructure::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function concessions()
+    {
+        return $this->hasMany(Concession::class);
+    }
+
+    public function transportRoutes()
+    {
+        return $this->hasMany(TransportRoute::class);
+    }
+
+    public function transportAssignments()
+    {
+        return $this->hasMany(TransportAssignment::class);
+    }
+
+    public function settings()
+    {
+        return $this->hasMany(Setting::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function studentPromotions()
+    {
+        return $this->hasMany(StudentPromotion::class);
+    }
+
+    public function previousYearBalances()
+    {
+        return $this->hasMany(PreviousYearBalance::class);
     }
 }

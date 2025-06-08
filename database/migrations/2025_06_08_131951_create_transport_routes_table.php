@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transport_routes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->unique();
+            $table->string('code');
             $table->text('description')->nullable();
             $table->decimal('distance', 8, 2); // in kilometers
             $table->decimal('monthly_fee', 10, 2);

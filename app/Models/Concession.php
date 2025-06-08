@@ -25,8 +25,12 @@ class Concession extends Model
         'fee_type_id',
         'academic_year_id',
         'school_id',
+        'created_by',
         'approved_by',
-        'approved_at'
+        'approved_at',
+        'rejected_by',
+        'rejected_at',
+        'documents'
     ];
 
     protected $casts = [
@@ -34,7 +38,9 @@ class Concession extends Model
         'valid_from' => 'date',
         'valid_until' => 'date',
         'requires_approval' => 'boolean',
-        'approved_at' => 'datetime'
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'documents' => 'array'
     ];
 
     public function student()
@@ -57,8 +63,38 @@ class Concession extends Model
         return $this->belongsTo(School::class);
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function approvedBy()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejectedBy()
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
+
+    public function approve($userId, $remarks = null)
+    {
+        $this->update([
+            'status' => 'approved',
+            'approved_by' => $userId,
+            'approved_at' => now(),
+            'rejection_reason' => null
+        ]);
+    }
+
+    public function reject($userId, $reason)
+    {
+        $this->update([
+            'status' => 'rejected',
+            'rejected_by' => $userId,
+            'rejected_at' => now(),
+            'rejection_reason' => $reason
+        ]);
     }
 }

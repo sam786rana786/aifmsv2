@@ -21,6 +21,7 @@ class Student extends Model
         'religion',
         'caste',
         'nationality',
+        'aadhar_number',
         'phone',
         'email',
         'address',
@@ -38,7 +39,11 @@ class Student extends Model
         'guardian_phone',
         'guardian_occupation',
         'guardian_relation',
-        'photo',
+        'photo_path',
+        'admission_date',
+        'previous_school',
+        'previous_qualification',
+        'documents',
         'is_active',
         'school_id',
         'academic_year_id',
@@ -47,7 +52,9 @@ class Student extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'is_active' => 'boolean'
+        'admission_date' => 'date',
+        'is_active' => 'boolean',
+        'documents' => 'array'
     ];
 
     public function school()
@@ -65,8 +72,58 @@ class Student extends Model
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function concessions()
+    {
+        return $this->hasMany(Concession::class);
+    }
+
+    public function transportAssignments()
+    {
+        return $this->hasMany(TransportAssignment::class);
+    }
+
+    public function promotions()
+    {
+        return $this->hasMany(StudentPromotion::class);
+    }
+
+    public function previousYearBalances()
+    {
+        return $this->hasMany(PreviousYearBalance::class);
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'recipient');
+    }
+
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()->where('status', 'paid')->sum('amount');
+    }
+
+    public function getTotalDueAttribute()
+    {
+        $totalFees = $this->class->feeStructures()
+            ->where('academic_year_id', $this->academic_year_id)
+            ->sum('amount');
+        
+        $totalPaid = $this->getTotalPaidAttribute();
+        $totalConcessions = $this->concessions()
+            ->where('status', 'approved')
+            ->where('academic_year_id', $this->academic_year_id)
+            ->sum('value');
+
+        return $totalFees - $totalPaid - $totalConcessions;
     }
 }

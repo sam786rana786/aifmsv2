@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fee_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->unique();
+            $table->string('code');
             $table->text('description')->nullable();
             $table->enum('frequency', ['one_time', 'monthly', 'quarterly', 'annually']);
             $table->boolean('is_optional')->default(false);
