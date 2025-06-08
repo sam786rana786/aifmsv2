@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { CalendarDays, Eye, Edit, Trash2, Plus } from 'lucide-vue-next'
 
-import AppLayout from '@/Layouts/AppLayout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
 import { usePermissions } from '@/composables/usePermissions'
 import { formatDate } from '@/lib/utils'
 
