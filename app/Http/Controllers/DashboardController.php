@@ -18,6 +18,7 @@ class DashboardController extends Controller
 {
     public function index(): Response
     {
+        /** @var \App\Models\User $user */  
         $user = Auth::user();
         
         // Get school-specific data for non-super admins

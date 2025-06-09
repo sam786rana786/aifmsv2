@@ -47,6 +47,7 @@ class AcademicYearController extends Controller implements HasMiddleware
         // Use policy for additional authorization if needed
         Gate::authorize('viewAny', AcademicYear::class);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $academicYears = AcademicYear::query()
@@ -88,6 +89,7 @@ class AcademicYearController extends Controller implements HasMiddleware
             'school_id' => 'sometimes|exists:schools,id', // Allow Super Admin to specify school
         ]);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         // Determine school_id based on user role

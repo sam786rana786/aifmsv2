@@ -9,6 +9,13 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method bool hasRole(string $role)
+ * @method bool hasPermissionTo(string $permission)
+ * @method bool hasAnyRole(array $roles)
+ * @method bool hasAllRoles(array $roles)
+ */
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, SoftDeletes;
